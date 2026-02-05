@@ -5,16 +5,23 @@ const todoSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    done:{
-      type:Boolean,
-      default:false,
+    status: {
+        type: String,
+        enum: ['pending', 'in-progress', 'completed'],
+        default: 'pending',
     },
-   
-}, 
-{
-  timestamps:true,
-}
-);
+    priority: {
+        type: String,
+        enum: ['low', 'medium', 'high'],
+        default: 'medium',
+    },
+    completedAt: {
+        type: Date,
+        default: null,
+    },
+}, {
+    timestamps: true,
+});
 
 const TodoModel = mongoose.model('tasks', todoSchema);
 

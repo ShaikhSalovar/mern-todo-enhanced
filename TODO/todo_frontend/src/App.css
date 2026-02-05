@@ -49,6 +49,211 @@ button {
 button:hover {
   background-color: rgb(84, 19, 146);
 }
+
+.search-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 10px 20px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 7px;
+  background-color: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+  font-size: 14px;
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: blueviolet;
+}
+
+/* Task Statistics */
+.stats-container {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px;
+  padding: 15px 20px;
+  justify-content: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 8px;
+  min-width: 80px;
+}
+
+.stat-item.total {
+  background-color: #3a3a3a;
+}
+
+.stat-item.pending {
+  background-color: #4a2a2a;
+}
+
+.stat-item.in-progress {
+  background-color: #4a3a1a;
+}
+
+.stat-item.completed {
+  background-color: #1a472a;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+/* Status Badge */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.status-pending {
+  background-color: #dc3545;
+  color: white;
+}
+
+.status-in-progress {
+  background-color: #ffc107;
+  color: black;
+}
+
+.status-completed {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Filter Buttons */
+.filter-container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+  padding: 10px 20px;
+  justify-content: center;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  min-width: auto;
+  background-color: #333;
+  border: 1px solid #555;
+  font-size: 13px;
+}
+
+.filter-btn.active {
+  background-color: blueviolet;
+  border-color: blueviolet;
+}
+
+.filter-btn:hover {
+  background-color: #444;
+}
+
+.filter-btn.active:hover {
+  background-color: rgb(84, 19, 146);
+}
+
+/* Priority Badge */
+.priority-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: bold;
+  margin-right: 8px;
+  text-transform: uppercase;
+}
+
+.priority-low {
+  background-color: #6c757d;
+  color: white;
+}
+
+.priority-medium {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.priority-high {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Priority Select */
+.priority-select {
+  padding: 15px 10px;
+  margin-left: 10px;
+  border-radius: 7px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  cursor: pointer;
+}
+
+/* Status Select in Create Form */
+.create-form .status-select {
+  padding: 15px 10px;
+  margin-left: 10px;
+  border-radius: 7px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  cursor: pointer;
+}
+
+/* Status Select in Task */
+.task .status-select {
+  padding: 6px 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+.status-select-pending {
+  background-color: #dc3545;
+  color: white;
+}
+
+.status-select-in-progress {
+  background-color: #ffc107;
+  color: black;
+}
+
+.status-select-completed {
+  background-color: #28a745;
+  color: white;
+}
+
+.task-actions {
+  display: flex;
+  align-items: center;
+}
+
 .task {
   display: flex;
   justify-content: space-between; 
@@ -61,9 +266,23 @@ button:hover {
   width: 100%; 
 }
 
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .task .checkbox {
   display: flex;
   align-items: center;
+}
+
+.task-timestamps {
+  display: flex;
+  gap: 15px;
+  font-size: 11px;
+  color: #777;
+  margin-left: 30px;
 }
 
 .task .icon {
@@ -84,25 +303,94 @@ button:hover {
   text-decoration: none;
 }
 
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+.page-btn {
+  padding: 8px 16px;
+  min-width: auto;
+  background-color: #333;
+  border: 1px solid #555;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-info {
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* Disabled status select */
+.status-select:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 /* Media Query for smaller screens */
 @media screen and (max-width: 600px) {
   .create-form {
-    flex-direction: column; /* Stack input and button vertically on smaller screens */
+    flex-direction: column;
     align-items: stretch;
+  }
+
+  input[type='text'] {
+    min-width: auto;
   }
 
   button {
     margin-top: 10px;
-    background-color: blueviolet; 
-    height: 30px;
-    min-width: 350px;
+    margin-left: 0;
+    background-color: blueviolet;
+    min-width: auto;
     padding: 10px;
-    text-align: center;
   }
 
-  .task{
-    align-items: stretch;
+  .priority-select,
+  .create-form .status-select {
+    margin-left: 0;
+    margin-top: 10px;
+  }
 
+  .stats-container {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .stat-item {
+    min-width: 70px;
+    padding: 8px 12px;
+  }
+
+  .stat-number {
+    font-size: 18px;
+  }
+
+  .filter-container {
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  .task {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .task-actions {
+    justify-content: flex-end;
   }
 }
 
