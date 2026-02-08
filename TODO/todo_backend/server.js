@@ -7,7 +7,10 @@ const authRoutes = require('./routes/auth');
 const auth = require('./middleware/auth');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:3000', 'https://shaikhsalovar.github.io'],
+    credentials: true
+}));
 app.use(express.json());
 
 
