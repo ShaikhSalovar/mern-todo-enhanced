@@ -8,9 +8,12 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 
 function App() {
+    // Use basename only in production (GitHub Pages)
+    const basename = process.env.NODE_ENV === 'production' ? '/mern-todo-enhanced' : '';
+
     return (
         <AuthProvider>
-            <Router basename={process.env.PUBLIC_URL}>
+            <Router basename={basename}>
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
