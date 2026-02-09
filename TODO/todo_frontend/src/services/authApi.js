@@ -2,9 +2,13 @@ import axios from 'axios';
 
 const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:5000') + '/api/auth';
 
+// Request timeout (30 seconds - allows for Render cold starts)
+const REQUEST_TIMEOUT = 30000;
+
 // Create axios instance with auth header
 const authAxios = axios.create({
     baseURL: API_BASE_URL,
+    timeout: REQUEST_TIMEOUT,
 });
 
 // Add token to requests
@@ -22,8 +26,11 @@ authAxios.interceptors.response.use(
     (error) => {
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
-            if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
-                window.location.href = '/login';
+            const pathname = window.location.pathname;
+            const isAuthPage = pathname.endsWith('/login') || pathname.endsWith('/register');
+            if (!isAuthPage) {
+                const basename = process.env.NODE_ENV === 'production' ? '/mern-todo-enhanced' : '';
+                window.location.href = basename + '/login';
             }
         }
         return Promise.reject(error);
@@ -31,12 +38,12 @@ authAxios.interceptors.response.use(
 );
 
 export const register = async (name, email, password) => {
-    const response = await axios.post(`${API_BASE_URL}/register`, { name, email, password });
+    const response = await axios.post(`${API_BASE_URL}/register`, { name, email, password }, { timeout: REQUEST_TIMEOUT });
     return response.data;
 };
 
 export const login = async (email, password) => {
-    const response = await axios.post(`${API_BASE_URL}/login`, { email, password });
+    const response = await axios.post(`${API_BASE_URL}/login`, { email, password }, { timeout: REQUEST_TIMEOUT });
     return response.data;
 };
 

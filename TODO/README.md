@@ -7,6 +7,32 @@ A full-stack Todo application built with the MERN stack (MongoDB, Express.js, Re
 - **Frontend**: [https://shaikhsalovar.github.io/mern-todo-enhanced](https://shaikhsalovar.github.io/mern-todo-enhanced)
 - **Backend API**: [https://mern-todo-enhanced.onrender.com](https://mern-todo-enhanced.onrender.com)
 
+---
+
+## Screenshots
+
+### Login Page
+The login screen allows users to securely sign in using their email and password.
+
+[![Login Page](screenshots/login.png)](screenshots/login.png)
+
+### Register Page
+New users can create an account with basic validation and password strength indicator.
+
+[![Register Page](screenshots/register.png)](screenshots/register.png)
+
+### Dashboard / Todo List
+The main dashboard displays tasks with filters, statistics, search, and task actions.
+
+[![Dashboard](screenshots/dashboard.png)](screenshots/dashboard.png)
+
+### Profile Page
+Users can update profile details and change their password from this page.
+
+[![Profile Page](screenshots/profile.png)](screenshots/profile.png)
+
+---
+
 ## Features
 
 ### Authentication System
@@ -35,6 +61,8 @@ A full-stack Todo application built with the MERN stack (MongoDB, Express.js, Re
 - Loading states
 - Error handling
 
+---
+
 ## Technology Stack
 
 ### Frontend
@@ -53,6 +81,8 @@ A full-stack Todo application built with the MERN stack (MongoDB, Express.js, Re
 - dotenv
 - cors
 
+---
+
 ## Prerequisites
 
 Before running this project, make sure you have:
@@ -61,6 +91,8 @@ Before running this project, make sure you have:
 - **MongoDB** (v4.4 or higher) - [Download](https://www.mongodb.com/try/download/community) or use [MongoDB Atlas](https://www.mongodb.com/atlas)
 - **npm** (comes with Node.js)
 - **Git** - [Download](https://git-scm.com/)
+
+---
 
 ## Installation
 
@@ -122,6 +154,8 @@ npm start
 3. Click "Create one" to register a new account
 4. After registration, login and start adding todos
 
+---
+
 ## Usage Guide
 
 ### Registration
@@ -152,6 +186,8 @@ npm start
 2. Update your personal information
 3. Change your password if needed
 4. Click "Update Profile" to save changes
+
+---
 
 ## Report Understanding (Code-Level)
 
@@ -262,6 +298,8 @@ const StatsBar = ({ stats }) => {
 └─────────────────┘
 ```
 
+---
+
 ## New Feature Documentation
 
 *This section is reserved for documenting new features as they are added to the application.*
@@ -282,6 +320,8 @@ const StatsBar = ({ stats }) => {
 | Task Statistics | v1.0 | Real-time dashboard showing task counts |
 | Server-side Pagination | v1.0 | Efficient loading of large task lists |
 | Search & Filter | v1.0 | Find tasks quickly by name or status |
+
+---
 
 ## Project Structure
 
@@ -332,6 +372,12 @@ TODO/
 │   │   └── App.css              # Global styles
 │   └── package.json
 │
+├── screenshots/
+│   ├── login.png                # Login page screenshot
+│   ├── register.png             # Register page screenshot
+│   ├── dashboard.png            # Dashboard screenshot
+│   └── profile.png              # Profile page screenshot
+│
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml           # GitHub Actions deployment
@@ -341,6 +387,8 @@ TODO/
 ├── API_DOCUMENTATION.md
 └── DEPLOYMENT.md
 ```
+
+---
 
 ## API Endpoints
 
@@ -361,6 +409,8 @@ See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentatio
 | PUT | /update/:id | Update todo | Yes |
 | DELETE | /delete/:id | Delete todo | Yes |
 
+---
+
 ## Security Features
 
 - **Password Hashing**: All passwords are hashed using bcrypt with 10 salt rounds
@@ -369,6 +419,8 @@ See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentatio
 - **User Isolation**: Users can only access their own todos
 - **Input Validation**: Both frontend and backend validation
 - **Environment Variables**: Sensitive data stored in .env files
+
+---
 
 ## Deployment
 
@@ -391,7 +443,7 @@ The frontend is automatically deployed to GitHub Pages using GitHub Actions.
 
 3. **Monitor deployment**:
    - Go to Actions tab to see workflow status
-   - Frontend URL: `https://<username>.github.io/mern-todo-enhanced`
+   - Frontend URL: `https://shaikhsalovar.github.io/mern-todo-enhanced`
 
 #### Manual Deployment
 
@@ -442,21 +494,7 @@ npm run deploy
    - For development: Your IP
    - For Render: `0.0.0.0/0` (allow all)
 
-## Screenshots
-
-### Login Page
-![Login Page](screenshots/login.png)
-
-### Register Page
-![Register Page](screenshots/register.png)
-
-### Dashboard
-![Dashboard](screenshots/dashboard.png)
-
-### Profile Page
-![Profile Page](screenshots/profile.png)
-
-*Note: Add your screenshots to a `screenshots` folder*
+---
 
 ## Contributing
 
@@ -466,9 +504,13 @@ npm run deploy
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+---
+
 ## License
 
 This project is licensed under the ISC License.
+
+---
 
 ## Author
 
@@ -476,6 +518,8 @@ This project is licensed under the ISC License.
 
 - GitHub: [@ShaikhSalovar](https://github.com/ShaikhSalovar)
 - Email: salovarshaikh@gmail.com
+
+---
 
 ## Acknowledgments
 

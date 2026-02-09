@@ -86,13 +86,18 @@ const Register = () => {
         }
 
         setLoading(true);
-        const result = await register(name, email, password);
-        setLoading(false);
-
-        if (result.success) {
-            navigate('/dashboard');
-        } else {
-            setError(result.error);
+        try {
+            const result = await register(name, email, password);
+            if (result.success) {
+                navigate('/dashboard');
+            } else {
+                setError(result.error || 'Registration failed. Please try again.');
+            }
+        } catch (err) {
+            console.error('Registration error:', err);
+            setError('An unexpected error occurred. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
 
