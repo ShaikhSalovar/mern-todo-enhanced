@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+      // Single Page App redirect for GitHub Pages
+      // Stores the requested path and redirects to index.html
+      var pathSegmentsToKeep = 1; // Keep /mern-todo-enhanced
+      var l = window.location;
+      var path = l.pathname.split('/').slice(pathSegmentsToKeep + 1).join('/');
+      var search = l.search;
+      var hash = l.hash;
+
+      sessionStorage.setItem('redirectPath', '/' + path + search + hash);
+      l.replace(l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/mern-todo-enhanced/');
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
+</html>

@@ -10,7 +10,7 @@ import Profile from './pages/Profile';
 function App() {
     return (
         <AuthProvider>
-            <Router>
+            <Router basename={process.env.PUBLIC_URL}>
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
