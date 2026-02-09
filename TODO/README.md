@@ -2,6 +2,11 @@
 
 A full-stack Todo application built with the MERN stack (MongoDB, Express.js, React.js, Node.js) featuring complete user authentication, task management, and a modern dark-themed UI.
 
+## Live Demo
+
+- **Frontend**: [https://shaikhsalovar.github.io/mern-todo-enhanced](https://shaikhsalovar.github.io/mern-todo-enhanced)
+- **Backend API**: [https://mern-todo-enhanced.onrender.com](https://mern-todo-enhanced.onrender.com)
+
 ## Features
 
 ### Authentication System
@@ -53,20 +58,20 @@ A full-stack Todo application built with the MERN stack (MongoDB, Express.js, Re
 Before running this project, make sure you have:
 
 - **Node.js** (v14 or higher) - [Download](https://nodejs.org/)
-- **MongoDB** (v4.4 or higher) - [Download](https://www.mongodb.com/try/download/community)
+- **MongoDB** (v4.4 or higher) - [Download](https://www.mongodb.com/try/download/community) or use [MongoDB Atlas](https://www.mongodb.com/atlas)
 - **npm** (comes with Node.js)
 - **Git** - [Download](https://git-scm.com/)
 
 ## Installation
 
-### 1. Clone the Repository
+### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/mern-todo-app.git
+git clone https://github.com/ShaikhSalovar/mern-todo-app.git
 cd mern-todo-app/TODO
 ```
 
-### 2. Backend Setup
+### Step 2: Backend Setup
 
 ```bash
 # Navigate to backend folder
@@ -74,16 +79,10 @@ cd todo_backend
 
 # Install dependencies
 npm install
-
-# Create environment file
-cp .env.example .env
-
-# Edit .env file with your settings
-# - Set MONGO_URI to your MongoDB connection string
-# - Set JWT_SECRET to a strong random string
 ```
 
-**Backend .env Configuration:**
+Create a `.env` file in the `todo_backend` directory with the following configuration:
+
 ```env
 PORT=5000
 MONGO_URI=mongodb://127.0.0.1:27017/TODO
@@ -91,30 +90,37 @@ JWT_SECRET=your_super_secret_jwt_key_change_in_production
 NODE_ENV=development
 ```
 
-```bash
-# Start the backend server
-npm start
+> **Note**: For production, use a strong random string for `JWT_SECRET` and a MongoDB Atlas connection string for `MONGO_URI`.
 
+Start the backend server:
+
+```bash
+npm start
 # Server will run on http://localhost:5000
 ```
 
-### 3. Frontend Setup
+### Step 3: Frontend Setup
+
+Open a new terminal window:
 
 ```bash
-# Open new terminal and navigate to frontend folder
-cd todo_frontend
+# Navigate to frontend folder (from project root)
+cd TODO/todo_frontend
 
 # Install dependencies
 npm install
 
-# Create environment file (optional for local dev)
-cp .env.example .env
-
-# Start the frontend development server
+# Start the development server
 npm start
-
 # App will open at http://localhost:3000
 ```
+
+### Step 4: Verify Installation
+
+1. Open your browser to `http://localhost:3000`
+2. You should see the login page
+3. Click "Create one" to register a new account
+4. After registration, login and start adding todos
 
 ## Usage Guide
 
@@ -147,6 +153,136 @@ npm start
 3. Change your password if needed
 4. Click "Update Profile" to save changes
 
+## Report Understanding (Code-Level)
+
+This section explains the code flow for the dashboard statistics feature, showing how data flows from the backend to the frontend UI.
+
+### Statistics Data Flow
+
+#### 1. Backend: Statistics Calculation (`server.js`)
+
+The backend calculates statistics using MongoDB aggregation queries:
+
+```javascript
+// server.js - GET /get endpoint
+app.get('/get', auth, async (req, res) => {
+    const filter = { userId: req.userId };
+
+    // Parallel queries for performance
+    const [todos, total, pending, inProgress, completed] = await Promise.all([
+        TodoModel.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limitNum),
+        TodoModel.countDocuments(filter),
+        TodoModel.countDocuments({ ...filter, status: 'pending' }),
+        TodoModel.countDocuments({ ...filter, status: 'in-progress' }),
+        TodoModel.countDocuments({ ...filter, status: 'completed' })
+    ]);
+
+    res.json({
+        todos,
+        totalPages: Math.ceil(total / limitNum),
+        stats: { total, pending, inProgress, completed }
+    });
+});
+```
+
+**Key Points:**
+- Uses `Promise.all()` for parallel database queries (faster than sequential)
+- Counts are filtered by `userId` to show only the logged-in user's data
+- Returns `stats` object alongside paginated todos
+
+#### 2. Frontend: Data Fetching (`Home.js`)
+
+The Home page component fetches and manages statistics state:
+
+```javascript
+// Home.js - State and fetching
+const [stats, setStats] = useState({ total: 0, pending: 0, inProgress: 0, completed: 0 });
+
+const fetchTodos = async (statusFilter, pageNum, search = '') => {
+    const data = await todoApi.getTodos(statusFilter, pageNum, limit, search);
+    setTodos(data.todos);
+    setTotalPages(data.totalPages);
+    setStats(data.stats);  // Stats are extracted from API response
+};
+
+// Stats are passed to StatsBar component
+<StatsBar stats={stats} />
+```
+
+#### 3. Frontend: Statistics Display (`StatsBar.js`)
+
+The StatsBar component renders the statistics UI:
+
+```javascript
+// StatsBar.js - Rendering statistics
+const StatsBar = ({ stats }) => {
+    return (
+        <div className='stats-container'>
+            <div className='stat-item total'>
+                <span className='stat-number'>{stats.total}</span>
+                <span className='stat-label'>Total</span>
+            </div>
+            <div className='stat-item pending'>
+                <span className='stat-number'>{stats.pending}</span>
+                <span className='stat-label'>Pending</span>
+            </div>
+            <div className='stat-item in-progress'>
+                <span className='stat-number'>{stats.inProgress}</span>
+                <span className='stat-label'>In Progress</span>
+            </div>
+            <div className='stat-item completed'>
+                <span className='stat-number'>{stats.completed}</span>
+                <span className='stat-label'>Completed</span>
+            </div>
+        </div>
+    );
+};
+```
+
+### Data Flow Diagram
+
+```
+┌─────────────────┐    HTTP GET /get    ┌─────────────────┐
+│   React App     │ ─────────────────►  │  Express API    │
+│   (Home.js)     │                     │  (server.js)    │
+└────────┬────────┘                     └────────┬────────┘
+         │                                       │
+         │                              ┌────────▼────────┐
+         │                              │    MongoDB      │
+         │                              │  countDocuments │
+         │                              └────────┬────────┘
+         │                                       │
+         │    { stats: { total, pending, ... }}  │
+         │ ◄─────────────────────────────────────┘
+         │
+┌────────▼────────┐
+│   StatsBar      │
+│   Component     │
+│  (renders UI)   │
+└─────────────────┘
+```
+
+## New Feature Documentation
+
+*This section is reserved for documenting new features as they are added to the application.*
+
+### Planned Features
+- [ ] Due date for tasks
+- [ ] Task categories/tags
+- [ ] Email notifications
+- [ ] Dark/Light theme toggle
+- [ ] Export tasks to CSV
+- [ ] Collaborative todos (shared lists)
+
+### Recently Added Features
+
+| Feature | Version | Description |
+|---------|---------|-------------|
+| JWT Authentication | v1.0 | Secure user authentication system |
+| Task Statistics | v1.0 | Real-time dashboard showing task counts |
+| Server-side Pagination | v1.0 | Efficient loading of large task lists |
+| Search & Filter | v1.0 | Find tasks quickly by name or status |
+
 ## Project Structure
 
 ```
@@ -166,6 +302,8 @@ TODO/
 │
 ├── todo_frontend/
 │   ├── public/
+│   │   ├── index.html           # HTML template with SPA redirect handler
+│   │   └── 404.html             # GitHub Pages SPA redirect
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── CreateTodo/
@@ -193,6 +331,10 @@ TODO/
 │   │   ├── App.js               # Main app with routing
 │   │   └── App.css              # Global styles
 │   └── package.json
+│
+├── .github/
+│   └── workflows/
+│       └── deploy.yml           # GitHub Actions deployment
 │
 ├── .gitignore
 ├── README.md
@@ -228,6 +370,78 @@ See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentatio
 - **Input Validation**: Both frontend and backend validation
 - **Environment Variables**: Sensitive data stored in .env files
 
+## Deployment
+
+### GitHub Pages (Frontend)
+
+The frontend is automatically deployed to GitHub Pages using GitHub Actions.
+
+#### Automatic Deployment (Recommended)
+
+1. **Push to main branch** - The deployment workflow triggers automatically:
+   ```bash
+   git add .
+   git commit -m "Your commit message"
+   git push origin main
+   ```
+
+2. **Enable GitHub Pages** in repository settings:
+   - Go to Settings → Pages
+   - Source: "GitHub Actions"
+
+3. **Monitor deployment**:
+   - Go to Actions tab to see workflow status
+   - Frontend URL: `https://<username>.github.io/mern-todo-enhanced`
+
+#### Manual Deployment
+
+```bash
+cd TODO/todo_frontend
+
+# Build for production
+npm run build
+
+# Deploy using gh-pages (if configured)
+npm run deploy
+```
+
+### Render (Backend)
+
+1. **Create a new Web Service** on [Render](https://render.com)
+
+2. **Connect your GitHub repository**
+
+3. **Configure the service**:
+   - **Name**: `mern-todo-enhanced` (or your preferred name)
+   - **Root Directory**: `TODO/todo_backend`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+
+4. **Add environment variables**:
+   | Variable | Value |
+   |----------|-------|
+   | `PORT` | `5000` |
+   | `MONGO_URI` | Your MongoDB Atlas connection string |
+   | `JWT_SECRET` | A strong random string (min 32 chars) |
+   | `NODE_ENV` | `production` |
+
+5. **Deploy** and note your backend URL (e.g., `https://mern-todo-enhanced.onrender.com`)
+
+### MongoDB Atlas
+
+1. **Create a free cluster** at [MongoDB Atlas](https://www.mongodb.com/atlas)
+
+2. **Create a database user** with read/write permissions
+
+3. **Get your connection string**:
+   ```
+   mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/TODO?retryWrites=true&w=majority
+   ```
+
+4. **Whitelist IP addresses**:
+   - For development: Your IP
+   - For Render: `0.0.0.0/0` (allow all)
+
 ## Screenshots
 
 ### Login Page
@@ -243,26 +457,6 @@ See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for detailed API documentatio
 ![Profile Page](screenshots/profile.png)
 
 *Note: Add your screenshots to a `screenshots` folder*
-
-## Deployment
-
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
-
-### Quick Deploy
-
-**Frontend (Vercel)**
-1. Connect GitHub repository to Vercel
-2. Set build command: `cd todo_frontend && npm run build`
-3. Set output directory: `todo_frontend/build`
-4. Add environment variable: `REACT_APP_API_URL`
-
-**Backend (Render)**
-1. Create new Web Service on Render
-2. Connect GitHub repository
-3. Set root directory: `TODO/todo_backend`
-4. Set build command: `npm install`
-5. Set start command: `npm start`
-6. Add environment variables
 
 ## Contributing
 
@@ -280,7 +474,7 @@ This project is licensed under the ISC License.
 
 **Salovar Shaikh**
 
-- GitHub: [@shaikhsalovar](https://github.com/shaikhsalovar)
+- GitHub: [@ShaikhSalovar](https://github.com/ShaikhSalovar)
 - Email: salovarshaikh@gmail.com
 
 ## Acknowledgments
